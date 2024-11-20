@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customize Image</title>
+    <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js"
+        data-id="tanxim" data-description="Support me on Buy me a coffee!" data-message="" data-color="#8F54FD"
+        data-position="Right" data-x_margin="18" data-y_margin="18"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.0/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        canvas {
+            margin: 20px 0;
+            border: 1px solid #ccc;
+        }
+
+        @font-face {
+            font-family: 'amsterdam';
+            src: url(font/amsterdam-two-ttf.ttf) format('truetype');
+        }
+
+        .input-box {
+            display: flex;
+            flex-direction: column;
+            width: 70%;
+            max-width: 300px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .input-box input {
+            height: 20px;
+            width: 100%;
+            margin-top: 5px;
+            border: 2px solid rgb(143, 84, 253);
+        }
+
+        .input-box button {
+            margin-top: 5px;
+            width: 102%;
+            height: 28px;
+            background-color: rgb(143, 84, 253);
+            border: none;
+            color: white;
+        }
+
+        header {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            height: 50px;
+            padding: 0;
+            margin-bottom: 20px;
+
+        }
+
+        .floating-btn {
+            position: fixed;
+            bottom: 20px;
+            /* Distance from the bottom of the screen */
+            left: 20px;
+            /* Distance from the right side of the screen */
+            background-color: rgb(143, 84, 253);
+            /* Button color */
+            color: white;
+            /* Text color */
+            border: none;
+            border-radius: 4px;
+            /* Makes the button circular */
+            padding: 10px;
+            font-size: 16px;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* Shadow for the button */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            animation: heartbeat 1.5s infinite;
+        }
+
+        .floating-btn:hover {
+            background-color: rgb(102, 22, 252);
+            /* Hover color */
+        }
+
+        @keyframes heartbeat {
+
+            0%,
+            40%,
+            100% {
+                transform: scale(1);
+            }
+
+            20% {
+                transform: scale(1.1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header><img src="/logo.png" style="height: 50px;" alt="bts">
+        <h2>BTS Army Poster</h2>
+    </header>
+    <div class="input-box">
+        <input type="text" id="name" placeholder="Enter your name">
+        <input type="text" id="signature" placeholder="Signature">
+        <button onclick="generateImage()">Generate Image</button>
+    </div>
+    <br>
+    <canvas id="canvas"></canvas>
+    <br>
+    <a id="download" class="floating-btn" style="display: none;" download="custom_poster.jpg"><i
+            class="fa-solid fa-download"></i> DOWNLOAD</a>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const image = new Image();
+        image.src = 'blank.png'; // Path to your image template
+
+        function resizeCanvasToImage() {
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const imgAspectRatio = image.width / image.height;
+
+            // Define higher resolution (e.g., 2x for better quality)
+            const scaleFactor = 2; // Adjust as needed for quality
+            const baseWidth = imgAspectRatio > 1 ? screenWidth * 0.9 : screenHeight * 0.9 * imgAspectRatio;
+            const baseHeight = imgAspectRatio > 1 ? baseWidth / imgAspectRatio : screenHeight * 0.8;
+
+            // Set high-resolution dimensions
+            canvas.width = image.width;
+            canvas.height = image.height;
+
+            // Scale down for display
+            canvas.style.width = `${baseWidth}px`;
+            canvas.style.height = `${baseHeight}px`;
+        }
+
+        image.onload = () => {
+            resizeCanvasToImage();
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        };
+
+        function generateImage() {
+            const name = document.getElementById('name').value;
+            const signature = document.getElementById('signature').value;
+
+            // Redraw the image
+            ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+            // Load the custom font explicitly
+            const font = new FontFace('amsterdam', 'url(font/amsterdam-two-ttf.ttf)');
+            font.load().then((loadedFont) => {
+                document.fonts.add(loadedFont); // Add the font to the document
+
+                console.log('Custom font explicitly loaded!');
+
+                // Set and use the custom font
+                ctx.font = `${canvas.width * 0.043}px Arial`;
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+                ctx.textAlign = 'left';
+                ctx.fillText(name.toUpperCase(), canvas.width * 0.041, canvas.height * 0.313);
+
+                ctx.font = `${canvas.width * 0.040}px amsterdam`;
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+                ctx.textAlign = 'center';
+                ctx.fillText(signature.charAt(0).toUpperCase() + signature.slice(1).toLowerCase(), canvas.width * 0.82, canvas.height * 0.639);
+                // Show download link
+                const downloadLink = document.getElementById('download');
+                downloadLink.style.display = 'inline';
+                downloadLink.href = canvas.toDataURL('image/jpeg');
+            }).catch((err) => {
+                console.error('Font loading failed:', err);
+            });
+        }
+
+    </script>
+</body>
+
+</html>
