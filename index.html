@@ -114,7 +114,6 @@
     </header>
     <div class="input-box">
         <input type="text" id="name" placeholder="Enter your name">
-        <input type="text" id="signature" placeholder="Signature">
         <button onclick="generateImage()">Generate Image</button>
     </div>
     <br>
@@ -152,10 +151,13 @@
             resizeCanvasToImage();
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
         };
-
+        function getLastWord(sentence) {
+            const words = sentence.trim().split(/\s+/); // Split by whitespace
+            return words[words.length - 1]; // Get the last word
+        }
         function generateImage() {
             const name = document.getElementById('name').value;
-            const signature = document.getElementById('signature').value;
+            const signature = getLastWord(name);
 
             // Redraw the image
             ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
