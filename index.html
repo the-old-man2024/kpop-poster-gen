@@ -2,6 +2,15 @@
 <html lang="en">
 
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-6NMQ29WQW9"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-6NMQ29WQW9');
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Customize Image</title>
@@ -181,10 +190,11 @@
                 ctx.fillText(signature.charAt(0).toUpperCase() + signature.slice(1).toLowerCase(), canvas.width * 0.82, canvas.height * 0.639);
                 // Show download link
                 const downloadLink = document.getElementById('download');
+                downloadLink.dow
                 downloadLink.style.display = 'inline';
                 downloadLink.href = canvas.toDataURL('image/jpeg');
             }).catch((err) => {
-                console.error('Font loading failled:', err);
+                console.error('Font loading failed:', err);
             });
         }
 
