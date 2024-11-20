@@ -190,9 +190,10 @@
                 ctx.fillText(signature.charAt(0).toUpperCase() + signature.slice(1).toLowerCase(), canvas.width * 0.82, canvas.height * 0.639);
                 // Show download link
                 const downloadLink = document.getElementById('download');
-                downloadLink.dow
                 downloadLink.style.display = 'inline';
                 downloadLink.href = canvas.toDataURL('image/jpeg');
+                const fileName = name ? `${signature}.jpg` : 'custom_image.jpg';
+                downloadLink.download = fileName;
             }).catch((err) => {
                 console.error('Font loading failed:', err);
             });
